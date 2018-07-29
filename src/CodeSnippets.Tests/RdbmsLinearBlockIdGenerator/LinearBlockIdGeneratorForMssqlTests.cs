@@ -23,7 +23,7 @@ namespace CodeSnippets.Tests.RdbmsLinearBlockIdGenerator
         }
 
         [Fact]
-        public void Should_create_dimension_and_increment_range_if_exceeded()
+        public void Should_create_if_new_dimension_and_increment_range_if_exceeded()
         {
             var generator = new LinearBlockIdGenerator(_dbConnectionFactory, range: 15, tableName: TableName);
             var resultStore = new List<long>();
