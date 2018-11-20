@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BclSnippets\BclSnippets.csproj" />
     <ProjectReference Include="..\RdbmsLinearBlockIdGenerator\RdbmsLinearBlockIdGenerator.csproj" />
   </ItemGroup>
 
