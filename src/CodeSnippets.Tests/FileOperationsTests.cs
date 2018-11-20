@@ -11,7 +11,7 @@ using BclSnippets;
 using System.Threading.Tasks;
 using System.Text;
 
-namespace CodeSnippets.Tests.RdbmsLinearBlockIdGenerator
+namespace CodeSnippets.Tests
 {
     public class FileOperationsTests : IDisposable
     {
@@ -43,6 +43,24 @@ namespace CodeSnippets.Tests.RdbmsLinearBlockIdGenerator
             await FileOperations.WriteFileAsync(filePath, "Hello");
 
             File.ReadAllText(filePath, Encoding.Unicode).ShouldBe("Hello");
+        }
+
+        [Fact]
+        public void Should_throw_io_exception_on_file_used_by_other_process()
+        {
+            var ex = Should.Throw<System.IO.IOException>(() =>
+            {
+                using (var file = new FileStream(filePath,
+                    FileMode.Append, FileAccess.Write, FileShare.None,
+                    bufferSize: 4096, useAsync: true))
+                {
+                    new FileStream(filePath,
+                    FileMode.Append, FileAccess.Write, FileShare.None,
+                    bufferSize: 4096, useAsync: true);
+                };
+            });
+
+            ex.Message.ShouldMatch("because it is being used by another process");
         }
 
 
