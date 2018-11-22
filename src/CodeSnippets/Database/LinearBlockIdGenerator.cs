@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 
-namespace CodeSnippets.RdbmsLinearBlockIdGenerator
+namespace CodeSnippets.Database
 {
     /// <summary>
     /// This snippet is largely based off the implementation in https://github.com/sebastienros/yessql

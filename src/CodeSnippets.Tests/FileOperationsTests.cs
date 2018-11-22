@@ -1,15 +1,9 @@
-﻿using System;
-using System.Data.Common;
-using System.Data.SqlClient;
-using CodeSnippets.RdbmsLinearBlockIdGenerator;
-using Xunit;
-using System.Collections;
-using System.Collections.Generic;
-using Shouldly;
+﻿using Shouldly;
+using System;
 using System.IO;
-using BclSnippets;
-using System.Threading.Tasks;
 using System.Text;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace CodeSnippets.Tests
 {
