@@ -2,6 +2,7 @@
 using FastExpressionCompiler;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -13,7 +14,7 @@ namespace CodeSnippets.Expressions
         {
             var props = (from p in ofType.GetProperties()
                          from a in p.CustomAttributes
-                         //where a.AttributeType == typeof(IncludeInObjectBuilderAttribute)
+                         where a.AttributeType == typeof(IncludeInObjectBuilderAttribute)
                          where input.Keys.Contains(p.Name)
                          select p).ToArray();
 
@@ -57,15 +58,36 @@ namespace CodeSnippets.Expressions
                             throw new Exception($"Can't convert '{value}' to decimal");
                         propsToBind[idx] = Expression.Bind(prop, Expression.Constant(decVal, prop.PropertyType));
                         break;
+                    case Type t when t == typeof(bool):
+                        switch(value)
+                        {
+                            case "0":
+                                propsToBind[idx] = Expression.Bind(prop, Expression.Constant(false, prop.PropertyType));
+                                break;
+                            case "1":
+                                propsToBind[idx] = Expression.Bind(prop, Expression.Constant(true, prop.PropertyType));
+                                break;
+                            default:
+                                if (!bool.TryParse(value, out var boolVal))
+                                    throw new Exception($"Can't convert '{value}' to boolean");
+                                propsToBind[idx] = Expression.Bind(prop, Expression.Constant(boolVal, prop.PropertyType));
+                                break;
+                        }
+                        break;
                     case Type t when t == typeof(TimeSpan):
                         if (!long.TryParse(value, out var ticksVal))
                             throw new Exception($"Can't convert '{value}' to long as ticks/duration");
                         propsToBind[idx] = Expression.Bind(prop, Expression.Constant(new TimeSpan(ticksVal), prop.PropertyType));
                         break;
                     case Type t when t == typeof(DateTime):
-                        if (!long.TryParse(value, out var ticksVal))
-                            throw new Exception($"Can't convert '{value}' to long as ticks/duration");
-                        propsToBind[idx] = Expression.Bind(prop, Expression.Constant(new TimeSpan(ticksVal), prop.PropertyType));
+                        if (!DateTime.TryParse(value, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out var dtValue))
+                            throw new Exception($"Can't convert '{value}' to date/time");
+                        propsToBind[idx] = Expression.Bind(prop, Expression.Constant(dtValue, prop.PropertyType));
+                        break;
+                    case Type t when t == typeof(DateTimeOffset):
+                        if (!DateTimeOffset.TryParse(value, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out var dtoValue))
+                            throw new Exception($"Can't convert '{value}' to date/time");
+                        propsToBind[idx] = Expression.Bind(prop, Expression.Constant(dtoValue, prop.PropertyType));
                         break;
                     case Type t when t == typeof(float):
                         if (!float.TryParse(value, out var floatVal))
@@ -83,7 +105,6 @@ namespace CodeSnippets.Expressions
                     case Type t when t == typeof(char) && value.Length == 0:
                         propsToBind[idx] = Expression.Bind(prop, Expression.Constant(char.MinValue, prop.PropertyType));
                         break;
-                    
                     default:
                         throw new Exception("Cannot assign value to property. Type unsupported.");
                 }
