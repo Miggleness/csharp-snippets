@@ -1,20 +1,29 @@
 ﻿using Jil;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace CodeSnippets.DynamicProgramming
 {
     public static partial class ExpressionBuilder
     {
+        /// <summary>
+        /// Returns an expression making a call to Dictionart<>.ContainsKey method for a given dictionary and key
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression DictionaryContainsKeyExpression(Expression dictionaryExpr, Expression keyExpr)
         {
             return Expression.Call(dictionaryExpr, "ContainsKey", null, keyExpr);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as string. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsString(Expression dictionaryExpr, Expression keyExpr)
         {
             var resultVar = Expression.Variable(typeof(string));
@@ -24,22 +33,83 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
-        public static Expression GetValueFromDictionaryAs<T>(Expression dictionaryExpr, Expression keyExpr)
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as long. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsLong(Expression dictionaryExpr, Expression keyExpr)
         {
-            bool IsTypeSupported(Type t)
-            {
-                return t == typeof(int)
-                    || t == typeof(long)
-                    || t == typeof(decimal)
-                    || t == typeof(float)
-                    || t == typeof(double)
-                    || t == typeof(bool);
-            }
+            return GetValueFromDictionaryAs<long>(dictionaryExpr, keyExpr);
+        }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as int. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsInt(Expression dictionaryExpr, Expression keyExpr)
+        {
+            return GetValueFromDictionaryAs<int>(dictionaryExpr, keyExpr);
+        }
+
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as float. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsFloat(Expression dictionaryExpr, Expression keyExpr)
+        {
+            return GetValueFromDictionaryAs<float>(dictionaryExpr, keyExpr);
+        }
+
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as decimal. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsDecimal(Expression dictionaryExpr, Expression keyExpr)
+        {
+            return GetValueFromDictionaryAs<decimal>(dictionaryExpr, keyExpr);
+        }
+
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as double. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsDouble(Expression dictionaryExpr, Expression keyExpr)
+        {
+            return GetValueFromDictionaryAs<double>(dictionaryExpr, keyExpr);
+        }
+
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as boolean. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        public static Expression GetValueFromDictionaryAsBoolean(Expression dictionaryExpr, Expression keyExpr)
+        {
+            return GetValueFromDictionaryAs<bool>(dictionaryExpr, keyExpr);
+        }
+
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as the given type. This assumes that the key exists.
+        /// This only supports the following types: int, long, decimal, float, double, bool
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
+        private static Expression GetValueFromDictionaryAs<T>(Expression dictionaryExpr, Expression keyExpr)
+        {
             var type = typeof(T);
-
-            if (!IsTypeSupported(type))
-                throw new Exception($"Cannot use 'GetValueFromDictionaryAs<T>' for type {type.Name}");
 
             // create variables
             var resultVar = Expression.Variable(type, "parseResult");
@@ -61,6 +131,12 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as datetime. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsDateTime(Expression dictionaryExpr, Expression keyExpr)
         {
             // create variables
@@ -82,6 +158,12 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as datetime offset. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsDateTimeOffset(Expression dictionaryExpr, Expression keyExpr)
         {
             // create variables
@@ -103,6 +185,12 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as char. Takes the first character if given a string. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsChar(Expression dictionaryExpr, Expression keyExpr)
         {
             // create variables
@@ -128,6 +216,12 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as timespan. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsTimespan(Expression dictionaryExpr, Expression keyExpr)
         {
             // create variables
@@ -158,6 +252,13 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as given enum type. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsEnum(Expression dictionaryExpr, Expression keyExpr, Type enumType)
         {
             if (!enumType.IsEnum)
@@ -187,6 +288,13 @@ namespace CodeSnippets.DynamicProgramming
                 resultVar);
         }
 
+        /// <summary>
+        /// Gets the value of a given dictionary and returns it as a list of given type. This assumes that the key exists.
+        /// </summary>
+        /// <param name="dictionaryExpr"></param>
+        /// <param name="keyExpr"></param>
+        /// <param name="listType"></param>
+        /// <returns></returns>
         public static Expression GetValueFromDictionaryAsList(Expression dictionaryExpr, Expression keyExpr, Type listType)
         {
             bool IsGenericTypeSupported(Type t)
@@ -218,17 +326,6 @@ namespace CodeSnippets.DynamicProgramming
                 assignDictionaryLookupExpr,
                 assignParseResultExpr,
                 resultVar);
-
-            //var genericType = prop.PropertyType.GenericTypeArguments.FirstOrDefault();
-            //var dataConst = Expression.Constant(data, typeof(string));
-            //var propTypeConst = Expression.Constant(prop.PropertyType, typeof(Type));
-            //var optionsConst = Expression.Constant(null, typeof(Options));
-
-            //var callExpr = 
-            //    
-            //    
-
-            //return Expression.Bind(prop, callExpr);
         }
     }
 }

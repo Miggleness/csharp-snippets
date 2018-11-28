@@ -58,28 +58,28 @@ namespace CodeSnippets.DynamicProgramming
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<int>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsInt(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(long):
                         expressionBodies.Add(
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<long>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsLong(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(decimal):
                         expressionBodies.Add(
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<decimal>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsDecimal(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(bool):
                         expressionBodies.Add(
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<bool>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsBoolean(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(TimeSpan):
                         expressionBodies.Add(
@@ -107,14 +107,14 @@ namespace CodeSnippets.DynamicProgramming
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<float>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsFloat(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(double):
                         expressionBodies.Add(
                             Expression.IfThen(test: ifContainsKey,
                                 ifTrue: Expression.Assign(
                                         left: variableProp,
-                                        right: GetValueFromDictionaryAs<double>(dictionaryParam, propNameConst))));
+                                        right: GetValueFromDictionaryAsDouble(dictionaryParam, propNameConst))));
                         break;
                     case Type t when t == typeof(char):
                         expressionBodies.Add(
