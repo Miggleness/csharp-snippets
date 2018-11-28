@@ -7,22 +7,32 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
+using static CodeSnippets.DynamicProgramming.ExpressionBuilder;
 using CreateFunc = System.Func<System.Collections.Generic.Dictionary<string, string>, object>;
 
 namespace CodeSnippets.DynamicProgramming
 {
     public class BuildLambdaCreateObjectFromDictionarySpecsWithExpressions
     {
-        public static CreateFunc BuildLambdaCreateObjectFromDictionarySpecs(Type ofType)
+        public static CreateFunc Build(Type ofType)
         {
             var props = (from p in ofType.GetProperties()
                          from a in p.CustomAttributes
                          where a.AttributeType == typeof(IncludeInObjectBuilderAttribute)
                          select p).ToArray();
 
-            var ctor = Expression.New(ofType);
+            
+            
             var propsToBind = new List<MemberAssignment>();
             var dictionaryParam = Expression.Parameter(typeof(Dictionary<string, string>), "inputDictionary");
+            var expressionBodies = new List<Expression>();
+
+            var ctor = Expression.New(ofType);
+            var variable = Expression.Variable(ofType, "result");
+            //expressionBodies.Add(variable);
+            expressionBodies.Add(Expression.Assign(variable, ctor));
+            
+
             //var lambdaGetValueFromDictionary = Expression.Lambda<Func<Dictionary<string, string>, string, string>> (GetValueFromDictionary(dictionaryParam, Expression.Parameter(typeof(string), "key"), Expression.Parameter(typeof(string))),);
             //var callLambda = lambdaGetValueFromDictionary.Body.
 
@@ -30,77 +40,69 @@ namespace CodeSnippets.DynamicProgramming
             {
                 var prop = props[idx];
                 var propNameConst = Expression.Constant(prop.Name);
+                var variableProp = Expression.Property(variable, prop);
+                var ifContainsKey = DictionaryContainsKeyExpression(dictionaryParam, propNameConst);
 
                 switch (prop.PropertyType)
                 {
                     case Type t when t == typeof(string):
-
-                        //var containsKey = DictionaryContainsKey(dictionaryParam, propNameConst);
-
-                        //var assign = Expression.Assign(prop, GetValueFromDictionaryAsString(dictionaryParam, propNameConst, typeof(string)));
-                        //var ifThen = Expression.IfThen(containsKey, assign);
-
-
-                        //Expression.Bind(
-                        //        prop,
-                        //        GetValueFromDictionary(dictionaryParam, propNameConst, Expression.Parameter(typeof(string))))
-
-
-
-                        //propsToBind.Add(
-                        //    Expression.Bind(
-                        //        prop, 
-                        //        GetValueFromDictionary(dictionaryParam, propNameConst, Expression.Parameter(typeof(string))))
-                        //);
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey, 
+                                ifTrue: Expression.Assign(
+                                        left: variableProp, 
+                                        right: GetValueFromDictionaryAsString(dictionaryParam, propNameConst))));
                         break;
-                        //case Type t when t.IsEnum:
-                        //    object enumVal;
-                        //    try
-                        //    {
-                        //        enumVal = Enum.Parse(t, value); 
-                        //    }
-                        //    catch (Exception ex)
-                        //    { 
-                        //        throw new Exception($"'{value}' not a valid option for enum type '{t.FullName}'", ex); 
-                        //    }
-                        //    propsToBind[idx] = Expression.Bind(prop, Expression.Constant(enumVal, prop.PropertyType));
-                        //    break;
-                        //case Type t when t == typeof(int):
-                        //    if (!int.TryParse(value, out var intVal))
-                        //        throw new Exception($"Can't convert '{value}' to int");
-                        //    propsToBind[idx] = Expression.Bind(prop, Expression.Constant(intVal, prop.PropertyType));
-                        //    break;
-                        //case Type t when t == typeof(long):
-                        //    if (!long.TryParse(value, out var longVal))
-                        //        throw new Exception($"Can't convert '{value}' to long");
-                        //    propsToBind[idx] = Expression.Bind(prop, Expression.Constant(longVal, prop.PropertyType));
-                        //    break;
-                        //case Type t when t == typeof(decimal):
-                        //    if (!decimal.TryParse(value, out var decVal))
-                        //        throw new Exception($"Can't convert '{value}' to decimal");
-                        //    propsToBind[idx] = Expression.Bind(prop, Expression.Constant(decVal, prop.PropertyType));
-                        //    break;
-                        //case Type t when t == typeof(bool):
-                        //    switch(value)
-                        //    {
-                        //        case "0":
-                        //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(false, prop.PropertyType));
-                        //            break;
-                        //        case "1":
-                        //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(true, prop.PropertyType));
-                        //            break;
-                        //        default:
-                        //            if (!bool.TryParse(value, out var boolVal))
-                        //                throw new Exception($"Can't convert '{value}' to boolean");
-                        //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(boolVal, prop.PropertyType));
-                        //            break;
-                        //    }
-                        //    break;
-                        //case Type t when t == typeof(TimeSpan):
-                        //    if (!long.TryParse(value, out var ticksVal))
-                        //        throw new Exception($"Can't convert '{value}' to long as ticks/duration");
-                        //    propsToBind[idx] = Expression.Bind(prop, Expression.Constant(new TimeSpan(ticksVal), prop.PropertyType));
-                        //    break;
+                    case Type t when t.IsEnum:
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey,
+                                ifTrue: Expression.Assign(
+                                        left: variableProp,
+                                        right: GetValueFromDictionaryAsEnum(dictionaryParam, propNameConst, prop.PropertyType))));
+                        break;
+                    case Type t when t == typeof(int):
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey,
+                                ifTrue: Expression.Assign(
+                                        left: variableProp,
+                                        right: GetValueFromDictionaryAsInt(dictionaryParam, propNameConst))));
+                        break;
+                    case Type t when t == typeof(long):
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey,
+                                ifTrue: Expression.Assign(
+                                        left: variableProp,
+                                        right: GetValueFromDictionaryAsLong(dictionaryParam, propNameConst))));
+                        break;
+                    case Type t when t == typeof(decimal):
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey,
+                                ifTrue: Expression.Assign(
+                                        left: variableProp,
+                                        right: GetValueFromDictionaryAsDecimal(dictionaryParam, propNameConst))));
+                        break;
+                    //case Type t when t == typeof(bool):
+                    //    switch(value)
+                    //    {
+                    //        case "0":
+                    //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(false, prop.PropertyType));
+                    //            break;
+                    //        case "1":
+                    //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(true, prop.PropertyType));
+                    //            break;
+                    //        default:
+                    //            if (!bool.TryParse(value, out var boolVal))
+                    //                throw new Exception($"Can't convert '{value}' to boolean");
+                    //            propsToBind[idx] = Expression.Bind(prop, Expression.Constant(boolVal, prop.PropertyType));
+                    //            break;
+                    //    }
+                    //    break;
+                    case Type t when t == typeof(TimeSpan):
+                        expressionBodies.Add(
+                            Expression.IfThen(test: ifContainsKey,
+                                ifTrue: Expression.Assign(
+                                        left: variableProp,
+                                        right: GetValueFromDictionaryAsTimespan(dictionaryParam, propNameConst))));
+                        break;
                         //case Type t when t == typeof(DateTime):
                         //    if (!DateTime.TryParse(value, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None, out var dtValue))
                         //        throw new Exception($"Can't convert '{value}' to date/time");
@@ -135,8 +137,12 @@ namespace CodeSnippets.DynamicProgramming
                 }
             }
 
-            var init = Expression.MemberInit(ctor, propsToBind);
-            var lambda = Expression.Lambda<CreateFunc>(init, dictionaryParam);
+            // add return value
+            expressionBodies.Add(variable);
+
+            //var init = Expression.MemberInit(ctor, propsToBind);
+            var body = Expression.Block(expressionBodies);
+            var lambda = Expression.Lambda<CreateFunc>(body, dictionaryParam);
             return lambda.CompileFast<CreateFunc>();
         }
 

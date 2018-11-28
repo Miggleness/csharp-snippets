@@ -29,7 +29,7 @@ public class WorkflowDataFactory
         {
             return ""YAY"";
         }
-return ""NAY"";
+        return ""NAY"";
     }
 }
 ";

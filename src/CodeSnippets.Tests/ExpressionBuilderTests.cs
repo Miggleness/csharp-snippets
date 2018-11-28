@@ -16,7 +16,7 @@ namespace CodeSnippets.Tests
 
             var key = Expression.Parameter(typeof(string), "key");
 
-            var containsKeyCheck = ExpressionBuilder.DictionaryContainsKey(dictionaryParameter, key);
+            var containsKeyCheck = ExpressionBuilder.DictionaryContainsKeyExpression(dictionaryParameter, key);
             var lambdaExpr = Expression.Lambda<Func<Dictionary<string, string>, string, bool>>(containsKeyCheck, dictionaryParameter, key);
             var lambda = lambdaExpr.Compile();
 
@@ -36,7 +36,7 @@ namespace CodeSnippets.Tests
 
             var key = Expression.Constant("Key1");
             var valueResult = Expression.Parameter(typeof(string));
-            var containsKeyCheck = ExpressionBuilder.GetValueFromDictionaryAsString(dictionaryParameter, key, typeof(string));
+            var containsKeyCheck = ExpressionBuilder.GetValueFromDictionaryAsString(dictionaryParameter, key);
             var lambdaExpr = Expression.Lambda<Func<Dictionary<string, string>, string>>(containsKeyCheck, dictionaryParameter);
             var lambda = lambdaExpr.Compile();
 
