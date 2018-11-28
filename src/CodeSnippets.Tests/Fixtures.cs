@@ -35,6 +35,10 @@ namespace CodeSnippets.Tests
         public bool BoolText { get; set; }
         [IncludeInObjectBuilder("whatever")]
         public bool BoolNum { get; set; }
+        [IncludeInObjectBuilder("whatever")]
+        public List<string> StringList { get; set; }
+        [IncludeInObjectBuilder("whatever")]
+        public List<int> IntList { get; set; }
     }
 
     public class MyInstantiatedClassWithObjectProperty
