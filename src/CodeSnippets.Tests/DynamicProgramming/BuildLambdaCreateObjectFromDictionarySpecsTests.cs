@@ -2,6 +2,7 @@
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -14,11 +15,10 @@ namespace CodeSnippets.Tests.DynamicProgramming
         public BuildLambdaCreateObjectFromDictionarySpecsTests(ITestOutputHelper @out)
         {
             _out = @out;
-
         }
 
         [Fact]
-        public void t()
+        public void Should_create_object_from_specs()
         {
             var f = BuildLambdaCreateObjectFromDictionarySpecsWithExpressions.Build(typeof(MyInstantiatedClass));
 
@@ -36,9 +36,10 @@ namespace CodeSnippets.Tests.DynamicProgramming
                 {"LargerApproximation", "1.123456789" },
                 {"EmptyChar", "" },
                 {"OneChar", "a" },
-                {"BoolText", "true" },
-                {"BoolNum", "1" },
+                {"BoolTrue", "true" },
+                {"BoolFalse", "false" },
                 {"StringList", "[\"str1\", \"str2\"]" },
+                {"IntList", "[1, 2,3 ]" },
             };
 
             var result = f(input) as MyInstantiatedClass;
@@ -49,15 +50,16 @@ namespace CodeSnippets.Tests.DynamicProgramming
             result.Type.ShouldBe(MyInstantiatedClassEnum.Val2);
             result.Money.ShouldBe(1.0003m);
             result.OffsetBy.ShouldBe(TimeSpan.FromTicks(864000000000));
-            //result.Birthday.ShouldBe(DateTime.Parse("2008-11-01T19:35:00.0000000Z"));
-            //result.DDay.ShouldBe(DateTimeOffset.Parse("2008-11-01T19:35:00.0000000-07:00"));
-            //result.Approximation.ShouldBe(1.1234567f);
-            //result.LargerApproximation.ShouldBe(1.123456789);
-            //result.EmptyChar.ShouldBe(default(char));
-            //result.OneChar.ShouldBe('a');
-            //result.BoolText.ShouldBeTrue();
-            //result.BoolNum.ShouldBeTrue();
-            //result.StringList.SequenceEqual(new string[] { "str1", "str2" }).ShouldBeTrue();
+            result.Birthday.ShouldBe(DateTime.Parse("2008-11-01T19:35:00.0000000Z"));
+            result.DDay.ShouldBe(DateTimeOffset.Parse("2008-11-01T19:35:00.0000000-07:00"));
+            result.Approximation.ShouldBe(1.1234567f);
+            result.LargerApproximation.ShouldBe(1.123456789);
+            result.EmptyChar.ShouldBe(default(char));
+            result.OneChar.ShouldBe('a');
+            result.BoolTrue.ShouldBeTrue();
+            result.BoolFalse.ShouldBeFalse();
+            result.StringList.SequenceEqual(new string[] { "str1", "str2" }).ShouldBeTrue();
+            result.IntList.SequenceEqual(new int[] { 1, 2, 3 }).ShouldBeTrue();
 
         }
     }

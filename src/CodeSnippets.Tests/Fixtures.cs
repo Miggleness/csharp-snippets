@@ -32,9 +32,9 @@ namespace CodeSnippets.Tests
         [IncludeInObjectBuilder("whatever")]
         public char OneChar { get; set; }
         [IncludeInObjectBuilder("whatever")]
-        public bool BoolText { get; set; }
+        public bool BoolTrue { get; set; }
         [IncludeInObjectBuilder("whatever")]
-        public bool BoolNum { get; set; }
+        public bool BoolFalse { get; set; }
         [IncludeInObjectBuilder("whatever")]
         public List<string> StringList { get; set; }
         [IncludeInObjectBuilder("whatever")]
