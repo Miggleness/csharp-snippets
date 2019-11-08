@@ -3,9 +3,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSnippets
+namespace FileOperationsAsync
 {
-    public class FileOperations
+    public static class WriteFileOperation
     {
         public static async Task WriteFileAsync(string filePath, Stream content)
         {

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Data;
 using System.Data.Common;
-using System.Threading;
 
-namespace CodeSnippets.Database
+namespace RdbmsLinearBlockIdGenerator
 {
     /// <summary>
     /// This snippet is largely based off the implementation in https://github.com/sebastienros/yessql

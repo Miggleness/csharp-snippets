@@ -1,12 +1,11 @@
-﻿using CodeSnippets.DynamicProgramming;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CodeSnippets.Tests.DynamicProgramming
+namespace ObjectFactory
 {
     public class BuildLambdaCreateObjectFromDictionarySpecsTests
     {
@@ -20,7 +19,7 @@ namespace CodeSnippets.Tests.DynamicProgramming
         [Fact]
         public void Should_create_object_from_specs()
         {
-            var f = BuildLambdaCreateObjectFromDictionarySpecsWithExpressions.Build(typeof(MyInstantiatedClass));
+            var f = ObjectFactoryBuilderWithExpressions.For<MyInstantiatedClass>();
 
             var input = new Dictionary<string, string>()
             {

@@ -2,7 +2,7 @@
 using Xunit;
 using Xunit.Abstractions;
 
-namespace CodeSnippets.Tests
+namespace ObjectFactory
 {
     public class ExpressionsTest
     {

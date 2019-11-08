@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Linq.Expressions;
 
-namespace CodeSnippets.DynamicProgramming
+namespace ObjectFactory
 {
     public static partial class ExpressionBuilder
     {

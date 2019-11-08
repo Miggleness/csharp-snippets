@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Xunit;
 using System.Collections;
 using System.Collections.Generic;
 using Shouldly;
-using CodeSnippets.Database;
 
-namespace CodeSnippets.Tests.Database
+namespace RdbmsLinearBlockIdGenerator
 {
     public class LinearBlockIdGeneratorForMssqlTests : IDisposable
     {

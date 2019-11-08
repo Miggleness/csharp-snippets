@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeSnippets.Artifacts
+namespace ObjectFactory
 {
     [System.AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
     public sealed class IncludeInObjectBuilderAttribute : Attribute

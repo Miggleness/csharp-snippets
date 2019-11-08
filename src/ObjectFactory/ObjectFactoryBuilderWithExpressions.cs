@@ -1,20 +1,29 @@
-﻿using CodeSnippets.Artifacts;
-using FastExpressionCompiler;
-using Jil;
+﻿using FastExpressionCompiler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using static CodeSnippets.DynamicProgramming.ExpressionBuilder;
-using SpecToObjectFunc = System.Func<System.Collections.Generic.Dictionary<string, string>, object>;
+using static ObjectFactory.ExpressionBuilder;
+using ObjectFactoryFunc = System.Func<System.Collections.Generic.Dictionary<string, string>, object>;
 
-namespace CodeSnippets.DynamicProgramming
+namespace ObjectFactory
 {
-    public class BuildLambdaCreateObjectFromDictionarySpecsWithExpressions
+    public class ObjectFactoryBuilderWithExpressions
     {
-        public static SpecToObjectFunc Build(Type ofType)
+        public static Expression ExpressionFor<T>()
+        {
+            return ExpressionForInternal(typeof(T));
+        }
+
+        public static ObjectFactoryFunc For<T>()
+        {
+            var lambda = ExpressionForInternal(typeof(T));
+            return lambda.CompileFast<ObjectFactoryFunc>();
+        }
+
+        private static Expression<ObjectFactoryFunc> ExpressionForInternal(Type ofType)
         {
             var props = (from p in ofType.GetProperties()
                          from a in p.CustomAttributes
@@ -139,8 +148,8 @@ namespace CodeSnippets.DynamicProgramming
             expressionBodies.Add(variable);
 
             var body = Expression.Block(expressionBodies);
-            var lambda = Expression.Lambda<SpecToObjectFunc>(body, dictionaryParam);
-            return lambda.CompileFast<SpecToObjectFunc>();
+            return Expression.Lambda<ObjectFactoryFunc>(body, dictionaryParam);
+
         }
     }
 }

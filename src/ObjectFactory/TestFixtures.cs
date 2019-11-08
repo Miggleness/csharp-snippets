@@ -1,9 +1,8 @@
-﻿using CodeSnippets.Artifacts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeSnippets.Tests
+namespace ObjectFactory
 {
     public class MyInstantiatedClass
     {

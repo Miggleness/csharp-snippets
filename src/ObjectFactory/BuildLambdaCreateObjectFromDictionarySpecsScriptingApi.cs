@@ -1,5 +1,4 @@
-﻿using CodeSnippets.Artifacts;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -9,13 +8,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CreateFunc = System.Func<System.Collections.Generic.Dictionary<string, string>, object>;
+using ObjectFactoryFunc = System.Func<System.Collections.Generic.Dictionary<string, string>, object>;
 
-namespace CodeSnippets.DynamicProgramming
+namespace ObjectFactory
 {
     public class BuildLambdaCreateObjectFromDictionarySpecsScriptingApi
     {
-        public static CreateFunc Build()
+        public static ObjectFactoryFunc Build()
         {
             var code = @"
 using System;
@@ -60,7 +59,7 @@ public class WorkflowDataFactory
             var ourAssembly = Assembly.Load(ms.ToArray());
             var type = ourAssembly.GetType("WorkflowDataFactory");
             var o = (dynamic)Activator.CreateInstance(type);
-            return (CreateFunc)o.Do;
+            return (ObjectFactoryFunc)o.Do;
 
 
             //    var props = (from p in type.GetProperties()

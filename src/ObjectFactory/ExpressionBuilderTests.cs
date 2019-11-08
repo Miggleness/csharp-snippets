@@ -1,11 +1,10 @@
-﻿using CodeSnippets.DynamicProgramming;
-using Shouldly;
+﻿using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace CodeSnippets.Tests
+namespace ObjectFactory
 {
     public class ExpressionBuilderTests
     {
